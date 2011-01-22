@@ -2,9 +2,10 @@
 
 <div id="promo">
   Hello, <strong><%= @user.name %></strong>!
-  <% if @user.created_at != @user.updated_at%>
-    Last time you was here <%= @user.updated_ago %> and entered <%= @user.content.split.count %> words (<%= @user.content.split('').count %> characters)
+  <% if @user.updated_ago != '0 seconds ago' %>
+    Notepad was updated <%= @user.updated_ago %>.
   <% end %>
+  Stats for nerds: <%= @user.content.split.count %> words, <%= @user.content.split('').count %> characters
 </div>
 
 
