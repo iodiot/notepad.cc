@@ -1,0 +1,29 @@
+<%= form_for(@user) do |f| %>
+
+<div id="promo">
+  Hello, <strong><%= @user.name %></strong>! Last updated at <%= @user.updated_at %>. Last time you`ve entered <%= @user.content.split.count %> words or <%= @user.content.split('').count %> characters
+</div>
+
+
+<div class="input_form">
+  <%= f.submit :class => "big_button", :value => "Save" %>
+</div>
+
+<div class="stack ">
+
+  <div class="layer_1">
+
+    <div class="layer_2">
+
+      <div class="layer_3">
+          <%= f.text_area :content, :class => "contents", :spellcheck => "true" %>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<% end %>
+
