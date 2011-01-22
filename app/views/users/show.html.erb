@@ -1,7 +1,10 @@
 <%= form_for(@user) do |f| %>
 
 <div id="promo">
-  Hello, <strong><%= @user.name %></strong>! Last time you was here <%= @user.updated_ago %> and entered <%= @user.content.split.count %> words (<%= @user.content.split('').count %> characters)
+  Hello, <strong><%= @user.name %></strong>!
+  <% if @user.created_at != @user.updated_at%>
+    Last time you was here <%= @user.updated_ago %> and entered <%= @user.content.split.count %> words (<%= @user.content.split('').count %> characters)
+  <% end %>
 </div>
 
 
