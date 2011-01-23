@@ -1,6 +1,66 @@
-<h1>Editing user</h1>
+<%= form_for(@user) do |f| %>
 
-<%= render 'form' %>
+<div id="promo">
+  Hello, <strong><%= @user.name %></strong>!
+  <% if @user.updated_ago != '0 seconds ago' %>
+    Notepad was updated <%= @user.updated_ago %>.
+  <% end %>
+  Stats for nerds: <%= @user.content.split.count %> words, <%= @user.content.split('').count %> characters
+</div>
 
-<%= link_to 'Show', @user %> |
-<%= link_to 'Back', users_path %>
+
+<div class="stack ">
+
+  <div class="layer_1">
+
+    <div class="layer_2">
+
+      <div class="layer_3">
+          <%= f.text_area :content, :class => "contents", :spellcheck => "true" %>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<div id="controls">
+
+<% if @user.encrypted_password == '' %>
+  <span class="bubble_wrapper" onclick="just_clicked_bubble = 'set_password';">
+      <a href="#" onclick="just_clicked_bubble = 'set_password'; return false;">add password</a>
+
+      <div class="bubble" id="bubble_for_set_password" style="display:none;">
+          <div class="highlight"></div>
+
+          <%= f.password_field :password, :class => "text_input", :value => '' %><%= f.submit :class => "button", :value => 'save' %>
+
+          <div class="nipple"></div>
+      </div>
+  </span>
+<% else %>
+  <% link_to('/logout/' + @user.name, :title => 'Logout') do  %>
+    <img src="/images/padlock.png" width="8" height="13" />
+  <% end %>
+
+  <span class="bubble_wrapper" onclick="just_clicked_bubble = 'set_password';">
+      <a href="#" onclick="just_clicked_bubble = 'set_password'; return false;">change password</a>
+
+      <div class="bubble" id="bubble_for_set_password" style="display:none;">
+          <div class="highlight"></div>
+
+          <%= f.password_field :password, :class => "text_input", :value => '' %><%= f.submit :class => "button", :value => 'save' %>
+
+          <div class="nipple"></div>
+      </div>
+  </span>
+<% end %>
+
+<div class="input_form">
+  <%= f.submit :class => "big_button", :value => 'Save', :style => 'position: absolute; right: 80px; bottom: -10px;' %>
+</div>
+
+</div>
+
+<% end %>
+

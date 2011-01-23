@@ -400,9 +400,6 @@ form {
 .input_form {
     width: 625px;
     /*margin: 80px auto 0 auto;*/
-    position:absolute;
-    right:-450px;
-    bottom:10px;
 }
 
     .input_form .copy {
@@ -482,7 +479,7 @@ form {
         line-height: 24px;
         color: #28292a;
         padding: 12px 18px;
-        /*margin-top: 40px;*/
+        margin-top: 40px;
         text-shadow: 0 1px 0 #c2cbd2;
 
         cursor: pointer;

@@ -18,6 +18,7 @@ class UsersController < ApplicationController
     return time
   end
 
+
   # GET /users
   # GET /users.xml
   def index
@@ -32,40 +33,11 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.xml
   def show
-    #@user = User.find(params[:id])
+    @user = User.find(params[:id])
 
-    uname = params[:user_name]
-    uname = '' if uname == nil
-
-    # Redirects to unique user-name
-    if uname == ''
-      consonant = 'qwrtpsdfghjklzxcvbnm'.split('').to_a
-      vowel = 'eyuioa'.split('').to_a
-      (1..3).each do
-        uname << consonant[rand(consonant.size - 1)]
-        uname << vowel[rand(vowel.size - 1)]
-      end
-
-      digits = ('0'..'9').to_a
-      (1..2).each { uname << digits[rand(digits.size - 1)] }
-
-      redirect_to :action => "show", :user_name => uname
-    else
-      @user = User.find(:first, :conditions => {:name => uname})
-
-      if @user == nil
-        @user = User.new(:name => uname)
-        @user.save
-      end
-
-      @user.content = '' if @user.content == nil
-
-      @user.updated_ago = time_ago(@user.updated_at)
-
-      respond_to do |format|
-        format.html # show.html.erb
-        format.xml  { render :xml => @user }
-      end
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml => @user }
     end
   end
 
@@ -82,7 +54,39 @@ class UsersController < ApplicationController
 
   # GET /users/1/edit
   def edit
-    @user = User.find(params[:id])
+    uname = params[:user_name]
+    uname = '' if uname == nil
+
+    # Redirects to unique user-name
+    if uname == ''
+      consonant = 'qwrtpsdfghjklzxcvbnm'.split('').to_a
+      vowel = 'eyuioa'.split('').to_a
+      (1..3).each do
+        uname << consonant[rand(consonant.size - 1)]
+        uname << vowel[rand(vowel.size - 1)]
+      end
+
+      digits = ('0'..'9').to_a
+      (1..2).each { uname << digits[rand(digits.size - 1)] }
+
+      redirect_to :action => "edit", :user_name => uname
+    else
+      @user = User.find_by_name(uname)
+
+      # Auth
+      if (@user != nil) and !signed_in?(@user)
+        redirect_to '/login/' + uname
+        return
+      end
+
+      # Creates new user
+      if @user == nil
+        @user = User.new(:name => uname, :content => '', :encrypted_password => '', :password => '')
+        @user.save
+      end
+
+      @user.updated_ago = time_ago(@user.updated_at)
+    end
   end
 
   # POST /users
