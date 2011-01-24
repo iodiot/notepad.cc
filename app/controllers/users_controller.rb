@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
 
+  private
   def time_ago(from_time, to_time = Time.now, include_seconds = false, detail = false)
     from_time = from_time.to_time if from_time.respond_to?(:to_time)
     to_time = to_time.to_time if to_time.respond_to?(:to_time)
@@ -18,7 +19,22 @@ class UsersController < ApplicationController
     return time
   end
 
+  def remove_password
+    uname = params[:user_name]
+    uname = '' if uname == nil
 
+    user = User.find_by_name(uname)
+
+    if (user != nil) and signed_in?(user) and (user.has_password)
+      sign_out
+      logger.debug "DEBUG #{user.inspect}"
+      user.has_password = false
+      logger.debug "DEBUG #{user.inspect}"
+      redirect_to '/' + user.name
+    end
+  end
+
+  public
   # GET /users
   # GET /users.xml
   def index
@@ -59,29 +75,30 @@ class UsersController < ApplicationController
 
     # Redirects to unique user-name
     if uname == ''
+      # Generates unique user-name
       consonant = 'qwrtpsdfghjklzxcvbnm'.split('').to_a
       vowel = 'eyuioa'.split('').to_a
       (1..3).each do
         uname << consonant[rand(consonant.size - 1)]
         uname << vowel[rand(vowel.size - 1)]
       end
-
       digits = ('0'..'9').to_a
       (1..2).each { uname << digits[rand(digits.size - 1)] }
 
-      redirect_to :action => "edit", :user_name => uname
+      redirect_to :action => 'edit', :user_name => uname
     else
       @user = User.find_by_name(uname)
 
-      # Auth
-      if (@user != nil) and !signed_in?(@user)
+      # Auth?
+      logger.debug "DEBUG #{@user.inspect}"
+      if (@user != nil) and @user.has_password and !signed_in?(@user)
         redirect_to '/login/' + uname
         return
       end
 
       # Creates new user
       if @user == nil
-        @user = User.new(:name => uname, :content => '', :encrypted_password => '', :password => '')
+        @user = User.new(:name => uname, :content => '', :encrypted_password => '', :password => '', :has_password => false)
         @user.save
       end
 

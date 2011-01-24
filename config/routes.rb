@@ -1,12 +1,14 @@
 Notepad::Application.routes.draw do
   resources :sessions
-  resources :users, :only => [:edit, :update]
+  resources :users, :only => [:edit, :update, :remove_password]
+
+  match 'options/password/remove/:user_name' => 'users#remove_password'
 
   match 'logout/:user_name' => 'sessions#destroy'
-
   match 'login/:user_name' => 'sessions#new'
+
   match ':user_name' => 'users#edit'
-  match 'users/:id/edit' => 'users#edit'
+
   root :to => 'users#edit'
 
   # The priority is based upon order of creation:

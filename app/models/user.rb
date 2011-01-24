@@ -5,20 +5,25 @@ class User < ActiveRecord::Base
 
   before_save :encrypt_password
 
-  def self.authenticate(uname, submitted_password)
-    user = find_by_name(uname)
+  def self.authenticate(user_name, submitted_password)
+    user = find_by_name(user_name)
+
     return nil  if user.nil?
-    return user if user.has_password?(submitted_password)
+    return user if !user.has_password
+    return user if user.has_this_password?(submitted_password)
   end
 
-  def has_password?(submitted_password)
-    (encrypted_password == '') or (encrypted_password == encrypt(submitted_password))
+  def has_this_password?(submitted_password)
+    self.encrypted_password == encrypt(submitted_password)
   end
 
   private
-
     def encrypt_password
-      self.encrypted_password = password == '' ? '' : encrypt(password)
+      return if password == nil
+      return if password == ''
+
+      self.has_password = true
+      self.encrypted_password = encrypt(password)
     end
 
     def encrypt(string)

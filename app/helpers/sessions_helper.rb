@@ -5,7 +5,7 @@ module SessionsHelper
   end
 
   def signed_in?(user)
-    (user.encrypted_password == '') or (cookies[:remember_token] == user.encrypted_password)
+    cookies[:remember_token] == user.encrypted_password
   end
 
   def sign_out
