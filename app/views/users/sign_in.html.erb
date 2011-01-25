@@ -1,9 +1,9 @@
-<%= form_for(:session, :url => sessions_path) do |f| %>
+<%= form_for(:user, :url => '/login/' + @login) do |f| %>
 
 <div class="input_form" style="margin: 80px auto 0 auto; margin-bottom:40px;">
-  <div class="copy" style="margin-bottom:50px;">This notepad is password protected.</div>
+  <div class="copy" style="margin-bottom:50px;"><%= flash[:notice] %></div>
 
-  <%= f.hidden_field :user_name, :value => @uname %>
+  <%= f.hidden_field :login, :value => @login %>
 
   <div class="input_wrapper">
     <%= f.password_field :password, :class => 'text_input', :value => '', :id => 'pad_password' %>

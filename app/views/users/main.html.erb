@@ -1,7 +1,7 @@
-<%= form_for(@user) do |f| %>
+<%= form_for(@user, :url => '/options/content/save/' + @user.login) do |f| %>
 
 <div id="promo">
-  Hello, <strong><%= @user.name %></strong>!
+  Hello, <strong><%= @user.login %></strong>!
   <% if @user.updated_ago != '0 seconds ago' %>
     Notepad was updated <%= @user.updated_ago %>.
   <% end %>
@@ -33,11 +33,11 @@
         </div>
     </span>
   <% else %>
-    <% link_to('/logout/' + @user.name, :title => 'Logout') do  %>
+    <% link_to('/logout/' + @user.login, :title => 'Logout') do  %>
       <img src="/images/padlock.png" width="8" height="13" />
     <% end %>
 
-    <%= link_to 'remove password', '/options/password/remove/' + @user.name  %>
+    <%= link_to 'remove password', '/options/password/remove/' + @user.login  %>
 
   <% end %>
 
