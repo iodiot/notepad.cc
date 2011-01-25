@@ -36,6 +36,7 @@ class UsersController < ApplicationController
   def remove_password
     user = User.find_by_login(params[:login])
     user.password = '' if !user.nil?
+    session[:id] = nil
     redirect_to '/' + params[:login]
   end
 

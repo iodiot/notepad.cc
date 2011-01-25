@@ -1,9 +1,9 @@
 <%= form_for(@user, :url => '/options/content/save/' + @user.login) do |f| %>
 
 <div id="promo">
-  Hello, <strong><%= @user.login %></strong>!
+  Viewing <strong><%= @user.login %></strong>!
   <% if @user.updated_ago != '0 seconds ago' %>
-    Notepad was updated <%= @user.updated_ago %>.
+    Last time updated <%= @user.updated_ago %>.
   <% end %>
   Stats for nerds: <%= @user.content.split.count %> words, <%= @user.content.split('').count %> characters
 </div>
@@ -40,17 +40,19 @@
 
   <% if !@user.has_password %>
     <span class="bubble_wrapper" onclick="just_clicked_bubble = 'set_password';">
-        <a href="#" onclick="just_clicked_bubble = 'set_password'; return false;">add password</a>
+      <a href="#" onclick="just_clicked_bubble = 'set_password'; return false;">add password</a>
 
-        <div class="bubble" id="bubble_for_set_password" style="display:none;">
-            <div class="highlight"></div>
+      <div class="bubble" id="bubble_for_set_password" style="display:none;">
+          <div class="highlight"></div>
 
-            <%= f.password_field :password, :class => "text_input", :value => '' %><%= f.submit :class => "button", :value => 'save' %>
+          <%= f.password_field :password, :class => "text_input", :value => '' %><%= f.submit :class => "button", :value => 'save' %>
 
-            <div class="nipple"></div>
-        </div>
+          <div class="nipple"></div>
+      </div>
     </span>
-  <% else %>
+  <% end %>
+
+  <% if @user.has_password %>
     <%= link_to 'remove password', '/options/password/remove/' + @user.login  %>
   <% end %>
 
