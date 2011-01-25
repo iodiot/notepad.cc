@@ -20,6 +20,24 @@
 
 <div id="controls">
 
+  <% if @user.has_password %>
+    <% link_to('/logout/' + @user.login, :title => 'Logout') do  %>
+      <img src="/images/padlock.png" width="8" height="13" />
+    <% end %>
+  <% end %>
+
+  <span class="bubble_wrapper" onclick="just_clicked_bubble = 'change_url';">
+    <a href="#" onclick="return false;">change url</a>
+
+    <div class="bubble" id="bubble_for_change_url" style="display:none;">
+      <div class="highlight"></div>
+
+      <%= f.text_field :login, :class => 'text_input' %><%= f.submit :class => "button", :value => 'save' %>
+
+      <div class="nipple"></div>
+    </div>
+  </span>
+
   <% if !@user.has_password %>
     <span class="bubble_wrapper" onclick="just_clicked_bubble = 'set_password';">
         <a href="#" onclick="just_clicked_bubble = 'set_password'; return false;">add password</a>
@@ -33,12 +51,7 @@
         </div>
     </span>
   <% else %>
-    <% link_to('/logout/' + @user.login, :title => 'Logout') do  %>
-      <img src="/images/padlock.png" width="8" height="13" />
-    <% end %>
-
     <%= link_to 'remove password', '/options/password/remove/' + @user.login  %>
-
   <% end %>
 
   <div class="input_form">

@@ -51,7 +51,10 @@ class UsersController < ApplicationController
 
     # Creates new user
     if @user.nil?
-      @user = User.new(:login => login, :content => '', :password => '', :has_password => false)
+      @user = User.new
+      @user.login = login
+      @user.password = ''
+      @user.content = ''
       @user.save
     end
   end
@@ -63,9 +66,14 @@ class UsersController < ApplicationController
     passwd = params[:user][:password]
     @user.password = passwd if !passwd.nil? and !passwd.empty?
 
+    new_login = params[:user][:login]
+    if !new_login.nil? and !new_login.empty?
+      @user.login = new_login if User.find_by_login(new_login).nil?
+    end
+
     @user.save
 
-    redirect_to '/' + params[:login]
+    redirect_to '/' + @user.login
   end
 end
 

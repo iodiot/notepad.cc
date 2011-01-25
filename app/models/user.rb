@@ -2,7 +2,7 @@ require 'digest'
 
 class User < ActiveRecord::Base
   attr_accessor :password
-  attr_protected :id, :salt, :hashed_password, :has_password, :password
+  attr_protected :id, :salt, :hashed_password, :has_password, :password, :login
 
   validates_uniqueness_of :login
   validates_presence_of :login
