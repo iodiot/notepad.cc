@@ -2,9 +2,7 @@
 
 <div id="promo">
   Viewing <strong><%= @user.login %></strong>!
-  <% if @user.updated_ago != '0 seconds ago' %>
-    Last time updated <%= @user.updated_ago %>.
-  <% end %>
+  Updated <%= time_ago_in_words(@user.updated_at) %> ago.
   Stats for nerds: <%= pluralize(@user.content.split.count, 'word') %>, <%= pluralize(@user.content.split('').count, 'character') %>
 </div>
 
