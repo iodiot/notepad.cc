@@ -5,7 +5,7 @@
   <% if @user.updated_ago != '0 seconds ago' %>
     Last time updated <%= @user.updated_ago %>.
   <% end %>
-  Stats for nerds: <%= @user.content.split.count %> words, <%= @user.content.split('').count %> characters
+  Stats for nerds: <%= pluralize(@user.content.split.count, 'word') %>, <%= pluralize(@user.content.split('').count, 'character') %>
 </div>
 
 <div class="stack ">
