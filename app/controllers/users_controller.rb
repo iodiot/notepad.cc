@@ -37,7 +37,7 @@ class UsersController < ApplicationController
 
   def change_url
     user = User.find_by_login(params[:login])
-
+    logger.debug "DEBUG: #{user.inspect}"
     if User.find_by_login(params[:url]).nil?
       user.login = params[:url]
       user.save

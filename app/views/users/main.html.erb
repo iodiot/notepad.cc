@@ -30,7 +30,7 @@
 
       <div class="message" id="message_for_change_url_unavailable" style="display:none;">URL is unavailable</div>
 
-      <%= form_tag('/options/change_url/' + @user.login, :id => 'change_url_form', :remote => true) do %>
+      <%= form_tag('/options/change_url/' + @user.login, :id => 'change_url_form') do %>
       <%= text_field_tag :url, @user.login, :class => 'text_input', :id => 'change_url_input' %><%= submit_tag 'save', :class => 'button', :id => 'change_url_button' %>
       <% end %>
 
@@ -66,6 +66,7 @@
 
 var hasChanged = false;
 var justClickedBubble = false;
+var preventSubmit = true;
 
 function saveContent()
 {
@@ -79,20 +80,21 @@ function saveContent()
     hasChanged = false;
   }
 
-  setTimeout("saveContent()", 1000);
+  setTimeout("saveContent();", 1000);
 }
 
-function tryChangeUrl()
+function checkExistence()
 {
   $("#message_for_change_url_unavailable").hide();
 
-  $.post("/options/check_existence/" + $("#change_url_input").val(), function(data)
+  $.get("/options/check_existence/" + $("#change_url_input").val(), function(data)
   {
     if (data == "true") {
       $("#message_for_change_url_unavailable").show();
     } else {
-      //$("#change_url_form").removeAttr("data-remote");
-      //$("#change_url_form").submit();
+      $("#message_for_change_url_unavailable").hide();
+      preventSubmit = false;
+      $('#change_url_form').submit();
     }
   });
 }
@@ -134,7 +136,10 @@ $(document).ready(function() {
   });
 
   $("#change_url_form").submit(function() {
-    tryChangeUrl();
+    if (preventSubmit) {
+      checkExistence();
+      return false;
+    }
   });
 });
 
