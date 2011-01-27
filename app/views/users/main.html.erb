@@ -1,5 +1,5 @@
 <div id="promo">
-  Viewing <strong><%= @user.login %></strong>
+  My Documents\<%= @user.login %>.txt
   <!--Updated <%= time_ago_in_words(@user.updated_at) %> ago.
   <div id="stats""'>Stats for nerds: <%= pluralize(@user.content.split.count, 'word') %>, <%= pluralize(@user.content.split('').count, 'character') %></div>-->
 </div>
@@ -25,11 +25,13 @@
   <span class="bubble_wrapper">
     <a href="#change_url" onclick="justClickedBubble = true;">change url</a>
 
-    <div class="bubble" id="bubble_for_change_url" style="display:none;">
+    <div class="bubble" id="bubble_for_change_url" style="display:none;" onclick="justClickedBubble = true;">
       <div class="highlight"></div>
 
-      <%= form_tag('/options/url/change/' + @user.login, :remote => true) do %>
-      <%= text_field_tag :login, @user.login, :class => 'text_input', :id => 'change_url_input' %><%= submit_tag 'save', :class => 'button' %>
+      <div class="message" id="message_for_change_url_unavailable" style="display:none;">URL is unavailable</div>
+
+      <%= form_tag('/options/change_url/' + @user.login, :id => 'change_url_form', :remote => true) do %>
+      <%= text_field_tag :url, @user.login, :class => 'text_input', :id => 'change_url_input' %><%= submit_tag 'save', :class => 'button', :id => 'change_url_button' %>
       <% end %>
 
 
@@ -41,10 +43,10 @@
     <span class="bubble_wrapper">
       <a href="#add_password" onclick="justClickedBubble = true;">add password</a>
 
-      <div class="bubble" id="bubble_for_set_password" style="display:none;">
+      <div class="bubble" id="bubble_for_set_password" style="display:none;" onclick="justClickedBubble = true;">
           <div class="highlight"></div>
 
-          <%= form_tag('/options/password/add/' + @user.login, :remote => true) do %>
+          <%= form_tag('/options/add_password/' + @user.login) do %>
           <%= password_field_tag :password, '', :class => 'text_input', :id => 'add_password_input' %><%= submit_tag 'save', :class => 'button' %>
           <% end %>
 
@@ -54,7 +56,7 @@
   <% end %>
 
   <% if @user.has_password %>
-    <%= link_to 'remove password', '/options/password/remove/' + @user.login  %>
+    <%= link_to 'remove password', '/options/remove_password/' + @user.login  %>
   <% end %>
 
 </div>
@@ -69,7 +71,7 @@ function saveContent()
 {
   if (hasChanged) {
     $.post(
-      "/options/content/save/" + "<%= escape_javascript(@user.login) %>",
+      "/options/save_content/" + "<%= escape_javascript(@user.login) %>",
       {content: $("textarea.contents").val() },
       function(data){
     });
@@ -78,6 +80,21 @@ function saveContent()
   }
 
   setTimeout("saveContent()", 1000);
+}
+
+function tryChangeUrl()
+{
+  $.post("/options/check_existence/" + $("#change_url_input").val(), function(data)
+  {
+    if (data == "true") {
+      $("#message_for_change_url_unavailable").show();
+    } else {
+      $("#message_for_change_url_unavailable").hide();
+
+      $("#change_url_form").removeAttr("data-remote");
+      $("#change_url_form").submit();
+    }
+  });
 }
 
 $("textarea.contents").keyup(function() {
@@ -114,6 +131,10 @@ $(document).ready(function() {
     $(".bubble").hide();
     $("#bubble_for_change_url").show();
     $("#change_url_input").focus();
+  });
+
+  $("#change_url_form").submit(function() {
+    tryChangeUrl();
   });
 });
 

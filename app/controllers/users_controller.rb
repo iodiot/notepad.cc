@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
 
-  before_filter :login_required, :only => ['main', 'save', 'remove_password']
+  before_filter :login_required, :only => ['main', 'save', 'remove_password', 'change_url']
 
   def sign_in
     @login = params[:login]
@@ -25,17 +25,38 @@ class UsersController < ApplicationController
     end
   end
 
+  def check_existence
+    user = User.find_by_login(params[:login])
+    render :text => (user.nil? ? 'false' : 'true')
+  end
+
   def sign_out
     session[:id] = nil
     redirect_to '/login/' + params[:login]
   end
 
-  #def add_password
-  #end
+  def change_url
+    user = User.find_by_login(params[:login])
+
+    if User.find_by_login(params[:url]).nil?
+      user.login = params[:url]
+      user.save
+    end
+
+    redirect_to '/' + user.login
+  end
+
+  def add_password
+    user = User.find_by_login(params[:login])
+    user.password = params[:password] if !params[:password].nil?
+    session[:id] = user.id
+
+    redirect_to '/' + user.login
+  end
 
   def remove_password
     user = User.find_by_login(params[:login])
-    user.password = '' if !user.nil?
+    user.password = ''
     session[:id] = nil
     redirect_to '/' + params[:login]
   end

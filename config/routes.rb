@@ -1,8 +1,12 @@
 Notepad::Application.routes.draw do
   match ':login' => 'users#main'
-  match 'options/content/save/:login' => 'users#save'
 
-  match 'options/password/remove/:login' => 'users#remove_password'
+  match 'options/save_content/:login' => 'users#save'
+  match 'options/check_existence/:login' => 'users#check_existence'
+  match 'options/change_url/:login' => 'users#change_url'
+  match 'options/add_password/:login' => 'users#add_password'
+  match 'options/remove_password/:login' => 'users#remove_password'
+
   match 'logout/:login' => 'users#sign_out'
   match 'login/:login' => 'users#sign_in'
 
