@@ -84,15 +84,15 @@ function saveContent()
 
 function tryChangeUrl()
 {
+  $("#message_for_change_url_unavailable").hide();
+
   $.post("/options/check_existence/" + $("#change_url_input").val(), function(data)
   {
     if (data == "true") {
       $("#message_for_change_url_unavailable").show();
     } else {
-      $("#message_for_change_url_unavailable").hide();
-
-      $("#change_url_form").removeAttr("data-remote");
-      $("#change_url_form").submit();
+      //$("#change_url_form").removeAttr("data-remote");
+      //$("#change_url_form").submit();
     }
   });
 }
