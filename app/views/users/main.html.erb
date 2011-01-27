@@ -1,16 +1,14 @@
-<%= form_for(@user, :url => '/options/content/save/' + @user.login) do |f| %>
-
 <div id="promo">
-  Viewing <strong><%= @user.login %></strong>!
-  Updated <%= time_ago_in_words(@user.updated_at) %> ago.
-  Stats for nerds: <%= pluralize(@user.content.split.count, 'word') %>, <%= pluralize(@user.content.split('').count, 'character') %>
+  Viewing <strong><%= @user.login %></strong>
+  <!--Updated <%= time_ago_in_words(@user.updated_at) %> ago.
+  <div id="stats""'>Stats for nerds: <%= pluralize(@user.content.split.count, 'word') %>, <%= pluralize(@user.content.split('').count, 'character') %></div>-->
 </div>
 
-<div class="stack ">
+<div class="stack">
   <div class="layer_1">
     <div class="layer_2">
       <div class="layer_3">
-        <%= f.text_area :content, :class => "contents", :spellcheck => "true" %>
+        <%= text_area_tag :content, @user.content, :class => 'contents', :spellcheck => 'true' %>
       </div>
     </div>
   </div>
@@ -24,26 +22,31 @@
     <% end %>
   <% end %>
 
-  <span class="bubble_wrapper" onclick="just_clicked_bubble = 'change_url';">
-    <a href="#" onclick="return false;">change url</a>
+  <span class="bubble_wrapper">
+    <a href="#change_url" onclick="justClickedBubble = true;">change url</a>
 
     <div class="bubble" id="bubble_for_change_url" style="display:none;">
       <div class="highlight"></div>
 
-      <%= f.text_field :login, :class => 'text_input' %><%= f.submit :class => "button", :value => 'save' %>
+      <%= form_tag('/options/url/change/' + @user.login, :remote => true) do %>
+      <%= text_field_tag :login, @user.login, :class => 'text_input', :id => 'change_url_input' %><%= submit_tag 'save', :class => 'button' %>
+      <% end %>
+
 
       <div class="nipple"></div>
     </div>
   </span>
 
   <% if !@user.has_password %>
-    <span class="bubble_wrapper" onclick="just_clicked_bubble = 'set_password';">
-      <a href="#" onclick="just_clicked_bubble = 'set_password'; return false;">add password</a>
+    <span class="bubble_wrapper">
+      <a href="#add_password" onclick="justClickedBubble = true;">add password</a>
 
       <div class="bubble" id="bubble_for_set_password" style="display:none;">
           <div class="highlight"></div>
 
-          <%= f.password_field :password, :class => "text_input", :value => '' %><%= f.submit :class => "button", :value => 'save' %>
+          <%= form_tag('/options/password/add/' + @user.login, :remote => true) do %>
+          <%= password_field_tag :password, '', :class => 'text_input', :id => 'add_password_input' %><%= submit_tag 'save', :class => 'button' %>
+          <% end %>
 
           <div class="nipple"></div>
       </div>
@@ -54,11 +57,65 @@
     <%= link_to 'remove password', '/options/password/remove/' + @user.login  %>
   <% end %>
 
-  <div class="input_form">
-    <%= f.submit :class => "big_button", :value => 'Save', :style => 'position: absolute; right: 80px; bottom: -10px;' %>
-  </div>
-
 </div>
 
-<% end %>
+
+<script type="text/javascript">
+
+var hasChanged = false;
+var justClickedBubble = false;
+
+function saveContent()
+{
+  if (hasChanged) {
+    $.post(
+      "/options/content/save/" + "<%= escape_javascript(@user.login) %>",
+      {content: $("textarea.contents").val() },
+      function(data){
+    });
+
+    hasChanged = false;
+  }
+
+  setTimeout("saveContent()", 1000);
+}
+
+$("textarea.contents").keyup(function() {
+  hasChanged = true;
+});
+
+function closeIt()
+{
+  if (hasChanged) {
+    return "You have unsaved content.\n\nPlease wait a few seconds before leaving the page. The content will save automatically.";
+  }
+}
+
+window.onbeforeunload = closeIt;
+
+$(document).ready(function() {
+  saveContent();
+
+  $(window).click(function() {
+    if (justClickedBubble) {
+      justClickedBubble = false;
+    } else {
+      $(".bubble").hide();
+    }
+  });
+
+  $("[href='#add_password']").click(function() {
+    $(".bubble").hide();
+    $("#bubble_for_set_password").show();
+    $("#add_password_input").focus();
+  });
+
+  $("[href='#change_url']").click(function() {
+    $(".bubble").hide();
+    $("#bubble_for_change_url").show();
+    $("#change_url_input").focus();
+  });
+});
+
+</script>
 

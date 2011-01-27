@@ -62,19 +62,14 @@ class UsersController < ApplicationController
 
   def save
     @user = User.find_by_login(params[:login])
-    @user.update_attributes(params[:user])
+    return if @user.nil?
 
-    passwd = params[:user][:password]
-    @user.password = passwd if !passwd.nil? and !passwd.empty?
-
-    new_login = params[:user][:login]
-    if !new_login.nil? and !new_login.empty?
-      @user.login = new_login if User.find_by_login(new_login).nil?
+    if !params[:content].nil?
+      @user.content = params[:content]
+      @user.save
     end
 
-    @user.save
-
-    redirect_to '/' + @user.login
+    render :nothing => true
   end
 end
 
