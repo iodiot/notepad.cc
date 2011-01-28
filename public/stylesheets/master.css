@@ -13,7 +13,7 @@ html {
 /* scrollbar style from http://maxvoltar.com/, http://almaer.com/scrollbar/debug.html */
 
 ::-webkit-scrollbar {
-    width: 6px;
+    width: 6px;l
     height: 6px;
 }
 
