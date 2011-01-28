@@ -8,6 +8,7 @@
   <div class="layer_1">
     <div class="layer_2">
       <div class="layer_3">
+        <%= hidden_field_tag :login, @user.login, :class => 'login' %>
         <%= text_area_tag :content, @user.content, :class => 'contents', :spellcheck => 'true' %>
       </div>
     </div>

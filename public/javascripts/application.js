@@ -6,7 +6,7 @@ function saveContent()
 {
   if (hasChanged) {
     $.post(
-      "/options/save_content/" + "<%= escape_javascript(@user.login) %>",
+      "/options/save_content/" +  $("#login").val(),
       {content: $("textarea.contents").val() },
       function(data){
     });
@@ -14,7 +14,7 @@ function saveContent()
     hasChanged = false;
   }
 
-  setTimeout("saveContent();", 1000);
+  setTimeout("saveContent()", 1000);
 }
 
 function checkExistence()
@@ -36,10 +36,6 @@ function checkExistence()
   });
 }
 
-$("textarea.contents").keyup(function() {
-  hasChanged = true;
-});
-
 function closeIt()
 {
   if (hasChanged) {
@@ -51,6 +47,11 @@ window.onbeforeunload = closeIt;
 
 $(document).ready(function() {
   saveContent();
+
+  $("textarea.contents").keyup(function() {
+    hasChanged = true;
+  });
+
 
   $(window).click(function() {
     if (justClickedBubble) {
