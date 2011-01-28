@@ -68,6 +68,7 @@ $(document).ready(function() {
 
   $("[href='#change_url']").click(function() {
     $(".bubble").hide();
+    $("#message_for_change_url_unavailable").hide();
     $("#bubble_for_change_url").show();
     $("#change_url_input").focus();
   });
