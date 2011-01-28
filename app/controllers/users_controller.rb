@@ -20,7 +20,7 @@ class UsersController < ApplicationController
         session[:id] = user.id
         redirect_to '/' + params[:login]
       else
-        flash[:notice] = 'Bad password. Try again'
+        flash[:notice] = 'Wrong password. Try again'
       end
     end
   end
@@ -79,6 +79,8 @@ class UsersController < ApplicationController
       @user.content = ''
       @user.save
     end
+
+    @title = @user.login
   end
 
   def save

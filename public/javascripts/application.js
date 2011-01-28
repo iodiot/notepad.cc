@@ -52,7 +52,6 @@ $(document).ready(function() {
     hasChanged = true;
   });
 
-
   $(window).click(function() {
     if (justClickedBubble) {
       justClickedBubble = false;
